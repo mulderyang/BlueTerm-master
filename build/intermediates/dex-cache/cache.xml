@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="F:\Android\AndroidStudioProjects\BlueTerm-master1\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        revision="24.0.1"
+        sha1="79563d9012fc4126118e4b8660ddee398874b184">
+        <dex dex="F:\Android\AndroidStudioProjects\BlueTerm-master1\app\build\intermediates\pre-dexed\debug\instant-run-bootstrap_7e477b806cef392324a29e9deb9a77b5ab53e94c.jar" />
+    </item>
+    <item
+        jar="F:\Android\AndroidStudioProjects\BlueTerm-master1\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        revision="24.0.1"
+        sha1="583a3e739b0a1042728ec960cc3c6eb7c9158d75">
+        <dex dex="F:\Android\AndroidStudioProjects\BlueTerm-master1\app\build\intermediates\pre-dexed\debug\instant-run_0ca0cd59edce1ed63ea3cf156926fdcfccc5ec7c.jar" />
+    </item>
+
+</items>
