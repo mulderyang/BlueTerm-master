@@ -51,7 +51,7 @@ public class BluetoothSerialService {
     private final BluetoothAdapter mAdapter;
     private final Handler mHandler;
     private ConnectThread mConnectThread;
-    private ConnectedThread mConnectedThread, mConnectedThread2;
+    private ConnectedThread mConnectedThread, mConnectedThread2, mConnectedThread3;
     private int mState;
     
     private boolean mAllowInsecureConnections;
@@ -120,6 +120,11 @@ public class BluetoothSerialService {
             mConnectedThread2 = null;
         }
 
+        if (mConnectedThread3 != null) {
+            mConnectedThread3.cancel();
+            mConnectedThread3 = null;
+        }
+
         setState(STATE_NONE);
     }
 
@@ -159,19 +164,22 @@ public class BluetoothSerialService {
         }
 
         // Cancel any thread currently running a connection
-        if (mConnectedThread != null) {
+        if (mConnectedThread == null) {
         	//mConnectedThread.cancel();
         	//mConnectedThread = null;
 
-            mConnectedThread2 = new ConnectedThread(socket);
-            mConnectedThread2.start();
-        }
-        else {
-
-            // Start the thread to manage the connection and perform transmissions
             mConnectedThread = new ConnectedThread(socket);
             mConnectedThread.start();
         }
+        else if(mConnectedThread2 == null) {
+            mConnectedThread2 = new ConnectedThread(socket);
+            mConnectedThread2.start();
+        }
+        else if(mConnectedThread3 == null) {
+            mConnectedThread3 = new ConnectedThread(socket);
+            mConnectedThread3.start();
+        }
+        else {}
 
         // Send the name of the connected device back to the UI Activity
         Message msg = mHandler.obtainMessage(BlueTerm.MESSAGE_DEVICE_NAME);
@@ -220,6 +228,9 @@ public class BluetoothSerialService {
         r.write(out);
         if(mConnectedThread2 != null) {
             mConnectedThread2.write(out);
+        }
+        if(mConnectedThread3 != null) {
+            mConnectedThread3.write(out);
         }
     }
     
