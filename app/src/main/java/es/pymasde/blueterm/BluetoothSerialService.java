@@ -16,12 +16,6 @@
 
 package es.pymasde.blueterm;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.reflect.Method;
-import java.util.UUID;
-
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -30,6 +24,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.reflect.Method;
+import java.util.UUID;
 
 /**
  * This class does all the work for setting up and managing Bluetooth
@@ -44,12 +44,14 @@ public class BluetoothSerialService {
 
 
 	private static final UUID SerialPortServiceClass_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+    //private static final UUID SerialPortServiceClass_UUID = UUID.fromString("00001124-0000-1000-8000-00805F9B34FB");
+    //private static final UUID SerialPortServiceClass_UUID = UUID.fromString("ABCD1101-0000-1000-8000-AB50BACCDDFF");
 
     // Member fields
     private final BluetoothAdapter mAdapter;
     private final Handler mHandler;
     private ConnectThread mConnectThread;
-    private ConnectedThread mConnectedThread;
+    private ConnectedThread mConnectedThread, mConnectedThread2;
     private int mState;
     
     private boolean mAllowInsecureConnections;
@@ -113,6 +115,11 @@ public class BluetoothSerialService {
         	mConnectedThread = null;
         }
 
+        if (mConnectedThread2 != null) {
+            mConnectedThread2.cancel();
+            mConnectedThread2 = null;
+        }
+
         setState(STATE_NONE);
     }
 
@@ -129,7 +136,7 @@ public class BluetoothSerialService {
         }
 
         // Cancel any thread currently running a connection
-        if (mConnectedThread != null) {mConnectedThread.cancel(); mConnectedThread = null;}
+        //if (mConnectedThread != null) {mConnectedThread.cancel(); mConnectedThread = null;}
 
         // Start the thread to connect with the given device
         mConnectThread = new ConnectThread(device);
@@ -153,13 +160,18 @@ public class BluetoothSerialService {
 
         // Cancel any thread currently running a connection
         if (mConnectedThread != null) {
-        	mConnectedThread.cancel(); 
-        	mConnectedThread = null;
-        }
+        	//mConnectedThread.cancel();
+        	//mConnectedThread = null;
 
-        // Start the thread to manage the connection and perform transmissions
-        mConnectedThread = new ConnectedThread(socket);
-        mConnectedThread.start();
+            mConnectedThread2 = new ConnectedThread(socket);
+            mConnectedThread2.start();
+        }
+        else {
+
+            // Start the thread to manage the connection and perform transmissions
+            mConnectedThread = new ConnectedThread(socket);
+            mConnectedThread.start();
+        }
 
         // Send the name of the connected device back to the UI Activity
         Message msg = mHandler.obtainMessage(BlueTerm.MESSAGE_DEVICE_NAME);
@@ -206,6 +218,9 @@ public class BluetoothSerialService {
         }
         // Perform the write unsynchronized
         r.write(out);
+        if(mConnectedThread2 != null) {
+            mConnectedThread2.write(out);
+        }
     }
     
     /**

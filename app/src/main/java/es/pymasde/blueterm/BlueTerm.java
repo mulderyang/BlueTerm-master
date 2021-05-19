@@ -440,8 +440,8 @@ public class BlueTerm extends Activity {
                 switch (msg.arg1) {
                 case BluetoothSerialService.STATE_CONNECTED:
                 	if (mMenuItemConnect != null) {
-                		mMenuItemConnect.setIcon(android.R.drawable.ic_menu_close_clear_cancel);
-                		mMenuItemConnect.setTitle(R.string.disconnect);
+                		//mMenuItemConnect.setIcon(android.R.drawable.ic_menu_close_clear_cancel);
+                		//mMenuItemConnect.setTitle(R.string.disconnect);
                 	}
                 	
                 	mInputManager.showSoftInput(mEmulatorView, InputMethodManager.SHOW_IMPLICIT);
@@ -666,8 +666,10 @@ public class BlueTerm extends Activity {
         	}
         	else
             	if (getConnectionState() == BluetoothSerialService.STATE_CONNECTED) {
-            		mSerialService.stop();
-		    		mSerialService.start();
+            		//mSerialService.stop();
+		    		//mSerialService.start();
+                    Intent serverIntent = new Intent(this, DeviceListActivity.class);
+                    startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
             	}
             return true;
         case R.id.preferences:
